@@ -9,6 +9,10 @@ python = "^3.9"
 Django = "^4.1.2"
 django-rest-framework = "^0.1.0"
 drf-yasg = "^1.21.4"
+black = "^22.10.0"
+yml = "^0.0.1"
+mysqlclient = "^2.1.1"
+PyYAML = "^6.0"
 
 [tool.poetry.dev-dependencies]
 
