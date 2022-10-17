@@ -66,7 +66,7 @@ update_params = [
 @pytest.mark.parametrize("params", update_params)
 @pytest.mark.django_db()
 def test_update_wanted(params):
-    sut = wanted_repo.update(8, params)
+    sut = wanted_repo.update(2, params)
     isinstance(sut, dict)
     for param_key in params.keys():
         assert params[param_key] == sut[param_key]
@@ -76,12 +76,12 @@ def test_update_wanted(params):
 @pytest.mark.parametrize("param", invalid_wanted_update_params)
 def test_update_wanted_with_invalid_params(param):
     with pytest.raises(ValidationError):
-        wanted_repo.update(8, param)
+        wanted_repo.update(2, param)
 
 
 @pytest.mark.django_db()
 def test_delete_wanted():
-    assert wanted_repo.delete(8)
+    assert wanted_repo.delete(2)
 
 
 @pytest.mark.django_db()
@@ -107,12 +107,12 @@ def test_count_with_options():
 
 @pytest.mark.django_db()
 def test_craete_application():
-    sut = application_repo.create(8, 1)
+    sut = application_repo.create(2, 2)
     assert isinstance(sut, dict)
 
 
 @pytest.mark.django_db()
 def test_craete_duplicated_application():
-    application_repo.create(8, 1)
+    application_repo.create(2, 2)
     with pytest.raises(DuplicatedApplicationError):
-        application_repo.create(8, 1)
+        application_repo.create(2, 2)

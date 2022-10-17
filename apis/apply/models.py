@@ -8,6 +8,7 @@ class Wanted(BaseModel):
         Company,
         related_name="company",
         on_delete=models.CASCADE,
+        db_column="company_id",
     )
     title = models.CharField(max_length=200)
     country = models.CharField(max_length=50)
@@ -22,9 +23,17 @@ class Wanted(BaseModel):
 
 
 class Application(BaseModel):
-    wanted = models.ForeignKey(Wanted, related_name="wanted", on_delete=models.CASCADE)
+    wanted = models.ForeignKey(
+        Wanted,
+        related_name="wanted",
+        on_delete=models.CASCADE,
+        db_column="wanted_id",
+    )
     applicant = models.ForeignKey(
-        Applicant, related_name="applicant", on_delete=models.CASCADE
+        Applicant,
+        related_name="applicant",
+        on_delete=models.CASCADE,
+        db_column="applicant_id",
     )
 
     class Meta:
