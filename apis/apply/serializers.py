@@ -1,6 +1,5 @@
-from dataclasses import field
 from rest_framework import serializers
-from .models import Wanted
+from .models import Wanted, Application
 
 
 class WantedSerializer(serializers.ModelSerializer):
@@ -25,3 +24,9 @@ class WantedListSerializer(serializers.ModelSerializer):
             "tech_stack_name",
             "updated_at",
         ]
+
+
+class ApplicationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Application
+        fields = "__all__"

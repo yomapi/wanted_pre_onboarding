@@ -20,10 +20,8 @@ class Wanted(BaseModel):
 
 
 class Application(BaseModel):
-    wanted_id = models.ForeignKey(
-        Wanted, related_name="wanted", on_delete=models.CASCADE
-    )
-    applicant_id = models.ForeignKey(
+    wanted = models.ForeignKey(Wanted, related_name="wanted", on_delete=models.CASCADE)
+    applicant = models.ForeignKey(
         Applicant, related_name="applicant", on_delete=models.CASCADE
     )
 

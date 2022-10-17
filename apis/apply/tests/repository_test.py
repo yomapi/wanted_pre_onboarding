@@ -2,10 +2,11 @@ import pytest
 from rest_framework.exceptions import ValidationError
 from django.conf import settings
 
-from apply.repositories import WantedRepo
-from exceptions import NotFoundError
+from apply.repositories import WantedRepo, ApplicationRepo
+from exceptions import NotFoundError, DuplicatedApplicationError
 
 wanted_repo = WantedRepo()
+application_repo = ApplicationRepo()
 
 
 @pytest.fixture(scope="session")
@@ -88,3 +89,16 @@ def test_count_with_options():
     sut = wanted_repo.count_with_options()
     assert isinstance(sut, int)
     assert sut >= 0
+
+
+@pytest.mark.django_db()
+def test_craete_application():
+    sut = application_repo.create(8, 1)
+    assert isinstance(sut, dict)
+
+
+@pytest.mark.django_db()
+def test_craete_duplicated_application():
+    application_repo.create(8, 1)
+    with pytest.raises(DuplicatedApplicationError):
+        application_repo.create(8, 1)

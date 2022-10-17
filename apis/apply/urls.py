@@ -1,4 +1,8 @@
 from django.urls import path
-from .apis import WantedAPI
+from .apis import WantedAPI, create_application, get_wanted
 
-urlpatterns = [path("", WantedAPI.as_view())]
+urlpatterns = [
+    path("application", create_application),
+    path("wanted", WantedAPI.as_view()),
+    path("wanted/<wanted_id>", get_wanted),
+]
