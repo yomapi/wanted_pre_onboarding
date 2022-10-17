@@ -43,18 +43,31 @@ class WantedAPI(APIView):
         return find_wanted(request)
 
     @swagger_auto_schema(
-        request_body=CreateWantedReqSchema,
+        request_body=CreateWantedReqSchema(partial=True),
         responses={201: WantedSerializer},
     )
     def post(self, request):
         return create_wanted(request)
 
 
-@swagger_auto_schema(
-    method="get",
-    responses={200: GetWantedResSchema},
-)
-@api_view(["GET"])
+class WantedDetailApi(APIView):
+    @swagger_auto_schema(
+        responses={200: GetWantedResSchema},
+    )
+    def get(self, request, wanted_id):
+        return get_wanted(request, wanted_id)
+
+    @swagger_auto_schema(
+        request_body=WantedSerializer,
+        responses={201: WantedSerializer},
+    )
+    def patch(self, request, wanted_id):
+        return update_wanted(request, wanted_id)
+
+    def delete(self, request, wanted_id):
+        return delete_wanted(request, wanted_id)
+
+
 @parser_classes([JSONParser])
 @execption_hanlder()
 def get_wanted(request, wanted_id):
@@ -63,6 +76,18 @@ def get_wanted(request, wanted_id):
         search_optons={"company": wanted["company"]}, exclude_id=wanted_id
     )
     return JsonResponse(wanted, safe=False)
+
+
+@parser_classes([JSONParser])
+@execption_hanlder()
+def update_wanted(request, wanted_id):
+    return JsonResponse(wanted_repo.update(wanted_id, request.data), safe=False)
+
+
+@parser_classes([JSONParser])
+@execption_hanlder()
+def delete_wanted(request, wanted_id):
+    return JsonResponse({"success": wanted_repo.delete(wanted_id)})
 
 
 @swagger_auto_schema(

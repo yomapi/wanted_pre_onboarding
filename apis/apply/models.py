@@ -5,13 +5,15 @@ from users.models import Applicant, Company
 
 class Wanted(BaseModel):
     company = models.ForeignKey(
-        Company, related_name="company", on_delete=models.CASCADE
+        Company,
+        related_name="company",
+        on_delete=models.CASCADE,
     )
     title = models.CharField(max_length=200)
     country = models.CharField(max_length=50)
     location = models.CharField(max_length=50)
     role = models.CharField(max_length=200)
-    reward = models.IntegerField(null=False, default=0)
+    reward = models.PositiveIntegerField(null=False, default=0)
     tech_stack_name = models.CharField(max_length=200)
     contents = models.TextField()
 

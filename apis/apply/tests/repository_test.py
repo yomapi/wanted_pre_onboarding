@@ -25,18 +25,18 @@ valid_wanted_create_params = {
     "contents": "adsasdasdasdasd",
 }
 
-invalid_wanted_params = (
-    [
-        {},
-        {**valid_wanted_create_params, "company": -125},
-        {**valid_wanted_create_params, "reward": "a"},
-        {
-            x: valid_wanted_create_params[x]
-            for x in valid_wanted_create_params
-            if x not in "company"
-        },
-    ],
-)
+invalid_wanted_params = [
+    {},
+    {**valid_wanted_create_params, "company": -125},
+    {**valid_wanted_create_params, "reward": "a"},
+]
+
+
+invalid_wanted_update_params = [
+    {"company": 1},
+    {"reward": -1000},
+    {"reward": "a"},
+]
 
 
 @pytest.mark.django_db()
@@ -52,17 +52,31 @@ def test_create_wanted_with_invalid_params(param):
         wanted_repo.create(param)
 
 
+update_params = [
+    {"reward": 1000},
+    {"title": "test1234"},
+    {"country": "abc"},
+    {"location": "Dokdo"},
+    {"role": "Jungle"},
+    {"tech_stack_name": "C++"},
+    {"contents": "a" * 200},
+]
+
+
+@pytest.mark.parametrize("params", update_params)
 @pytest.mark.django_db()
-def test_update_wanted():
-    sut = wanted_repo.update(8, {**valid_wanted_create_params, "reward": 1000})
+def test_update_wanted(params):
+    sut = wanted_repo.update(8, params)
     isinstance(sut, dict)
+    for param_key in params.keys():
+        assert params[param_key] == sut[param_key]
 
 
 @pytest.mark.django_db()
-@pytest.mark.parametrize("param", invalid_wanted_params)
+@pytest.mark.parametrize("param", invalid_wanted_update_params)
 def test_update_wanted_with_invalid_params(param):
     with pytest.raises(ValidationError):
-        wanted_repo.create(param)
+        wanted_repo.update(8, param)
 
 
 @pytest.mark.django_db()

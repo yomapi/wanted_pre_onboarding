@@ -1,8 +1,14 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from .models import Wanted, Application
 
 
 class WantedSerializer(serializers.ModelSerializer):
+    def validate_reward(self, value):
+        if value < 0:
+            raise ValidationError("rewards have to be equal or bigger than 0")
+        return value
+
     class Meta:
         model = Wanted
         fields = "__all__"

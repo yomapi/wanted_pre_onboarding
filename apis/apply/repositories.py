@@ -1,6 +1,6 @@
 from typing import Union
 from django.conf import settings
-
+from rest_framework.exceptions import ValidationError
 from apply.models import Wanted, Application
 from apply.serializers import (
     WantedSerializer,
@@ -31,7 +31,9 @@ class WantedRepo:
     def update(self, wanted_id: int, params: dict):
         try:
             target = self.model.objects.get(id=wanted_id)
-            serializer = self.serilaizer(target, data=params)
+            if params.get("company", False) and target.company != params["company"]:
+                raise ValidationError("You can't update company ID")
+            serializer = self.serilaizer(target, data=params, partial=True)
             serializer.is_valid(raise_exception=True)
             serializer.save()
         except self.model.DoesNotExist:
